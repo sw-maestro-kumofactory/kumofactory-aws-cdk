@@ -24,23 +24,15 @@ export class AppController {
     @Payload() data: Record<string, unknown>,
     @Ctx() context: RmqContext,
   ) {
+    console.log(`CONTROLLER ${JSON.stringify(data)}`);
     const channel = context.getChannelRef();
     const originalMessage = context.getMessage();
-
-    console.log('Received message: ', data);
+    channel.ack(originalMessage);
 
     const _data: any = data;
     const result = await this.appService.synthCdk(_data);
-    console.log(result);
-    channel.ack(originalMessage);
 
     return 'hello';
-  }
-
-  @Get('/test')
-  test(): string {
-    this.appService.accumulate();
-    return 'hell';
   }
 
   @Get()

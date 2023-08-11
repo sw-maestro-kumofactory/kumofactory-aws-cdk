@@ -10,9 +10,16 @@ import { ApplicationLoadBalancerStack } from '../lib/ec2/application-load-balanc
 import { RdsInstanceStack } from '../lib/rds/rds-instance-stack';
 import { AwsComponentType } from './type/aws-component.type';
 import * as cdk from 'aws-cdk-lib';
+import { exec } from 'aws-cdk/lib';
+import { AwsCdkService } from './global/aws-cdk.service';
 @Injectable()
 export class AppService {
-  constructor(@Inject('CDK_SERVICE') private readonly client: ClientProxy) {}
+  constructor(
+    @Inject('CDK_SERVICE') private readonly client: ClientProxy,
+    private readonly awsCdkService: AwsCdkService,
+  ) {}
+
+  private readonly app: cdk.App = new cdk.App();
   async getHello(): Promise<string> {
     await this.client.connect();
 
@@ -27,32 +34,13 @@ export class AppService {
   }
 
   async synthCdk(data: MessageDto[]) {
-    const scope = new cdk.App();
-    const ec2InstanceIds: string[] = [];
-
-    await Promise.all(
-      data.map(async (cdkData) => {
-        switch (cdkData.type) {
-          case AwsComponentType.EC2:
-            const result = await this.callEc2Stack(
-              scope,
-              cdkData.id,
-              cdkData.options,
-            );
-            ec2InstanceIds.push(result.getInstanceId());
-            break;
-          case AwsComponentType.ALB:
-            const albOptions = {
-              ...cdkData.options,
-              instancesIds: ec2InstanceIds,
-            };
-            await this.callAlbStack(scope, cdkData.id, albOptions);
-            break;
-        }
-      }),
-    );
-
-    return scope.synth();
+    console.log(`in Service ${JSON.stringify(data)}`);
+    AwsCdkService.data = data;
+    // const cloudAssembly = await AwsCdkService.init(data);
+    // console.log(cloudAssembly.stacks);
+    // z;
+    await exec(['synth', '--require-approval never']);
+    return 'hello';
   }
 
   async callEc2Stack(scope: Construct, id: string, option: any) {

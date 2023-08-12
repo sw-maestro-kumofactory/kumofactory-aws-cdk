@@ -41,6 +41,7 @@
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
+    "@aws-cdk/aws-elasticloadbalancingv2-targets": "^1.204.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

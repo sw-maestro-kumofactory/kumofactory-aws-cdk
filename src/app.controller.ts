@@ -5,7 +5,6 @@ import {
   AccessScopeType,
   AvailabilityZoneType,
 } from './cdk/ec2/type/instance.type';
-import { Ec2InstanceStack } from '../lib/ec2/Ec2InstanceStack';
 import {
   ClientProxy,
   Ctx,
@@ -19,6 +18,7 @@ import { MessageDto } from './dto /message.dto';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
+
   @MessagePattern()
   async getP2(
     @Payload() data: Record<string, unknown>,
@@ -27,6 +27,7 @@ export class AppController {
     console.log(`CONTROLLER ${JSON.stringify(data)}`);
     const channel = context.getChannelRef();
     const originalMessage = context.getMessage();
+
     channel.ack(originalMessage);
 
     const _data: any = data;

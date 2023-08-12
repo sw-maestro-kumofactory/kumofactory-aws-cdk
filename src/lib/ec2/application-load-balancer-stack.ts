@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { LoadBalancerType } from '../../src/cdk/ec2/type/loadbalancer.type';
-import { createApplicationLoadBalancer } from '../../src/cdk/ec2/loadbalancer';
+import { LoadBalancerType } from '../../cdk/ec2/type/loadbalancer.type';
+import { createApplicationLoadBalancer } from '../../cdk/ec2/loadbalancer';
 
 export class ApplicationLoadBalancerStack extends cdk.Stack {
   constructor(

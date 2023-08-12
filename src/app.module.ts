@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AwsCdkService } from './global/aws-cdk.service';
-import { AwsConfigureService } from './global/aws-configure.service';
 
 @Module({
   imports: [
@@ -17,7 +16,6 @@ import { AwsConfigureService } from './global/aws-configure.service';
   providers: [
     AppService,
     AwsCdkService,
-    AwsConfigureService,
     {
       provide: 'CDK_SERVICE',
       useFactory: (configService: ConfigService) => {

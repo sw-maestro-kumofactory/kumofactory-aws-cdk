@@ -9,8 +9,8 @@ import {
   AccessScopeType,
   AvailabilityZone,
   AvailabilityZoneType,
-} from '../src/cdk/ec2/type/instance.type';
-import { LoadBalancerType } from '../src/cdk/ec2/type/loadbalancer.type';
+} from '../cdk/ec2/type/instance.type';
+import { LoadBalancerType } from '../cdk/ec2/type/loadbalancer.type';
 import { ApplicationLoadBalancerStack } from '../lib/ec2/application-load-balancer-stack';
 import { RdsInstanceStack } from '../lib/rds/rds-instance-stack';
 

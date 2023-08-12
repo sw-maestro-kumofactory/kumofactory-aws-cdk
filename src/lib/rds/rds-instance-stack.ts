@@ -1,7 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { createRDSInstance } from '../../src/cdk/rds/RDSInstance';
-import { RdsStackType } from '../../src/cdk/rds/type/rds-stack.type';
+import { RdsStackType } from '../../cdk/rds/type/rds-stack.type';
+import { createRDSInstance } from '../../cdk/rds/RDSInstance';
+
 export class RdsInstanceStack extends cdk.Stack {
   constructor(
     scope: Construct,

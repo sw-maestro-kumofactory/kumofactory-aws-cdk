@@ -1,19 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SUBSCRIBE } from '@nestjs/microservices/constants';
 import { ClientProxy, MessagePattern } from '@nestjs/microservices';
-import { Message } from '@nestjs/microservices/external/kafka.interface';
-import { Observable } from 'rxjs';
 import { MessageDto } from './dto /message.dto';
-import { Ec2InstanceStack } from '../lib/ec2/Ec2InstanceStack';
 import { Construct } from 'constructs';
-import { ApplicationLoadBalancerStack } from '../lib/ec2/application-load-balancer-stack';
-import { RdsInstanceStack } from '../lib/rds/rds-instance-stack';
-import { AwsComponentType } from './type/aws-component.type';
 import * as cdk from 'aws-cdk-lib';
 import { exec } from 'aws-cdk/lib';
 import { AwsCdkService } from './global/aws-cdk.service';
 import * as fs from 'fs';
-import { AwsConfigureService } from './global/aws-configure.service';
+import { Ec2InstanceStack } from './lib/ec2/Ec2InstanceStack';
+import { ApplicationLoadBalancerStack } from './lib/ec2/application-load-balancer-stack';
+import { RdsInstanceStack } from './lib/rds/rds-instance-stack';
+
 @Injectable()
 export class AppService {
   constructor(
@@ -22,6 +18,7 @@ export class AppService {
   ) {}
 
   private readonly app: cdk.App = new cdk.App();
+
   async getHello(): Promise<string> {
     await this.client.connect();
 
@@ -33,8 +30,7 @@ export class AppService {
     // file write
     fs.writeFileSync('t.json', JSON.stringify(data).toString());
     // execute
-    await exec(['deploy', '--require-approval never']);
-    return 'hello';
+    await exec(['deploy', '--all', '--require-approval', 'never']);
     return 'hello';
   }
 

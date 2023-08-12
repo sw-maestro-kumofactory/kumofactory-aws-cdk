@@ -21,7 +21,6 @@ export const createApplicationLoadBalancer = (
   scope: Construct,
   props: LoadBalancerType,
 ) => {
-  console.log('IDS : ', props.instancesIds);
   const lb = new elb.ApplicationLoadBalancer(scope, props.id, {
     vpc: getVpc(scope),
     internetFacing: true,
@@ -59,9 +58,9 @@ export const createApplicationLoadBalancer = (
     },
   });
 
-  props.instancesIds.map((targetGroupKey) => {
+  props.instances.map((instance) => {
     const instanceIdTarget = new elbTarget.InstanceIdTarget(
-      targetGroupKey,
+      instance,
       props.targetGroupPort,
     );
     instanceIdTarget.attachToApplicationTargetGroup(targetGroup);

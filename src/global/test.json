@@ -1,0 +1,1 @@
+[{"id":"v11f1cb17c-aeed-47fd-8549-c2a768f40848","type":"EC2","options":{"instanceType":"t2.micro","machineImage":"ami-0c1a7f89451184c8b","subnetType":"PUBLIC","availabilityZone":"AP_NORTHEAST_2A","instanceName":"createdByAPI","securityGroupType":"PUBLIC","id":"v1f5fb8d5a-8bc2-4917-a86e-79fdcef1e0ee"}}]

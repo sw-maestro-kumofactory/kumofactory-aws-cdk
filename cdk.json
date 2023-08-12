@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts src/app.service.ts",
+  "app": "npx ts-node --prefer-ts-exts src/global/aws-cdk.service.ts",
   "watch": {
     "include": [
       "**"

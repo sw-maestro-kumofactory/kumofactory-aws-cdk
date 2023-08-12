@@ -12,6 +12,8 @@ import { AwsComponentType } from './type/aws-component.type';
 import * as cdk from 'aws-cdk-lib';
 import { exec } from 'aws-cdk/lib';
 import { AwsCdkService } from './global/aws-cdk.service';
+import * as fs from 'fs';
+import { AwsConfigureService } from './global/aws-configure.service';
 @Injectable()
 export class AppService {
   constructor(
@@ -26,20 +28,13 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async accumulate(): Promise<Observable<number>> {
-    const pattern = { cmd: 'sum' };
-    const payload = [1, 2, 3];
-    this.client.send<number>(pattern, payload);
-    return;
-  }
-
   async synthCdk(data: MessageDto[]) {
     console.log(`in Service ${JSON.stringify(data)}`);
-    AwsCdkService.data = data;
-    // const cloudAssembly = await AwsCdkService.init(data);
-    // console.log(cloudAssembly.stacks);
-    // z;
-    await exec(['synth', '--require-approval never']);
+    // file write
+    fs.writeFileSync('t.json', JSON.stringify(data).toString());
+    // execute
+    await exec(['deploy', '--require-approval never']);
+    return 'hello';
     return 'hello';
   }
 

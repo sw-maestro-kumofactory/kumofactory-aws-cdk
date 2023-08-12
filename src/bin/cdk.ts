@@ -55,10 +55,7 @@ const ec2InstanceStack2 = new Ec2InstanceStack(
 const albOptions: LoadBalancerType = {
   healthCheckPath: '/',
   id: 'a2',
-  instancesIds: [
-    ec2InstanceStack1.getInstanceId(),
-    ec2InstanceStack2.getInstanceId(),
-  ],
+  instances: [],
   listenerId: 'a2',
   name: 'qwiorjio32',
   port: 80,

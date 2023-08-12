@@ -9,6 +9,7 @@ import { createNewInstance } from '../../src/cdk/ec2/instance';
 
 export class Ec2InstanceStack extends cdk.Stack {
   private readonly instance: ec2.Instance;
+
   constructor(
     scope: Construct,
     id: string,
@@ -19,8 +20,8 @@ export class Ec2InstanceStack extends cdk.Stack {
     this.instance = createNewInstance(this, options);
   }
 
-  public getInstance(): ec2.Instance {
-    return this.instance;
+  public getInstance() {
+    return this.instance.instance;
   }
 
   public getInstanceId(): string {

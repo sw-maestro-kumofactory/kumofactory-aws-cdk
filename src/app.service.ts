@@ -30,25 +30,7 @@ export class AppService {
     // file write
     fs.writeFileSync('t.json', JSON.stringify(data).toString());
     // execute
-    await exec(['deploy', '--all', '--require-approval', 'never']);
+    await exec(['synth', '--require-approval', 'never']);
     return 'hello';
-  }
-
-  async callEc2Stack(scope: Construct, id: string, option: any) {
-    return new Ec2InstanceStack(scope, id, option, {
-      env: { account: '434126037102', region: 'ap-northeast-2' },
-    });
-  }
-
-  async callAlbStack(scope: Construct, id: string, option: any) {
-    return new ApplicationLoadBalancerStack(scope, id, option, {
-      env: { account: '434126037102', region: 'ap-northeast-2' },
-    });
-  }
-
-  async callRdsStack(scope: Construct, id: string, options: any) {
-    return new RdsInstanceStack(scope, id, options, {
-      env: { account: '434126037102', region: 'ap-northeast-2' },
-    });
   }
 }

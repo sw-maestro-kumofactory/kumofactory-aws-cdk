@@ -83,7 +83,7 @@ function generateId(type: AwsComponentType, now: string) {
 }
 
 function callEc2Stack(scope: Construct, id: string, option: any) {
-  return new Ec2InstanceStack(scope, id, option, {
+  return new Ec2InstanceStack(scope, 'a' + id, option, {
     env: { account: '434126037102', region: 'ap-northeast-2' },
   });
 }

@@ -22,7 +22,7 @@ import { AwsCdkService } from './global/aws-cdk.service';
         return ClientProxyFactory.create({
           transport: Transport.RMQ,
           options: {
-            urls: ['amqp://guest:guest@localhost:5672'],
+            urls: ['amqp://guest:guest@rabbitmq:5672'],
             queue: 'kumofactory-queue2',
             queueOptions: {
               durable: true,

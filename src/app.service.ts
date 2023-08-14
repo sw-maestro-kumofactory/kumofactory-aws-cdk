@@ -6,9 +6,8 @@ import * as cdk from 'aws-cdk-lib';
 import { exec } from 'aws-cdk/lib';
 import { AwsCdkService } from './global/aws-cdk.service';
 import * as fs from 'fs';
-import { Ec2InstanceStack } from './lib/ec2/Ec2InstanceStack';
-import { ApplicationLoadBalancerStack } from './lib/ec2/application-load-balancer-stack';
-import { RdsInstanceStack } from './lib/rds/rds-instance-stack';
+import * as path from 'path';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class AppService {
@@ -27,10 +26,32 @@ export class AppService {
 
   async synthCdk(data: MessageDto[]) {
     console.log(`in Service ${JSON.stringify(data)}`);
+    await this.deleteFolderRecursive('cdk.out');
     // file write
     fs.writeFileSync('t.json', JSON.stringify(data).toString());
     // execute
-    await exec(['synth', '--require-approval', 'never']);
+    await exec(['deploy', '--all', '--require-approval', 'never']);
     return 'hello';
+  }
+
+  // 폴더 삭제 함수
+  async deleteFolderRecursive(folderPath: string) {
+    if (fs.existsSync(folderPath)) {
+      fs.readdirSync(folderPath).forEach((file) => {
+        const curPath = path.join(folderPath, file);
+        if (fs.lstatSync(curPath).isDirectory()) {
+          // 재귀적으로 폴더 내 파일 및 하위 폴더 삭제
+          this.deleteFolderRecursive(curPath);
+        } else {
+          // 파일 삭제
+          fs.unlinkSync(curPath);
+        }
+      });
+      // 폴더 삭제
+      fs.rmdirSync(folderPath);
+      console.log(`Deleted folder: ${folderPath}`);
+    } else {
+      console.log(`Folder not found: ${folderPath}`);
+    }
   }
 }

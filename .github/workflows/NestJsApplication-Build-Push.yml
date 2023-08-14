@@ -17,6 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm # npm의 캐시 디렉토리 지정
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }} # 캐시 키 지정
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

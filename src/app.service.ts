@@ -30,7 +30,7 @@ export class AppService {
     // file write
     fs.writeFileSync('t.json', JSON.stringify(data).toString());
     // execute
-    await exec(['deploy', '--all', '--require-approval', 'never']);
+    await exec(['synth', '--require-approval', 'never']);
     return 'hello';
   }
 }

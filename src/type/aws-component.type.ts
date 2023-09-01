@@ -12,6 +12,8 @@ export const AwsComponentType = {
   ELASTIC_CACHE: 'ELASTIC_CACHE',
   CLOUDFRONT: 'CLOUDFRONT',
   AUTO_SCALING: 'AUTO_SCALING',
+  RDS_MYSQL: 'RDS_MYSQL',
+  RDS_M: 'RDS-MYSQL',
 };
 
 export type AwsComponentType =

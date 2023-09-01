@@ -19,7 +19,7 @@ export const createRDSInstance = (scope: Construct, options: RdsStackType) => {
     scope,
     secret.id ?? 'a' + randomUUID(),
     {
-      secretName: 'MyRDSDBCredentials', // Replace with your preferred secret name
+      secretName: secret.secretName, // Replace with your preferred secret name
       generateSecretString: {
         secretStringTemplate: JSON.stringify({
           username: secret.username ?? 'admin', // Replace with your RDS username
@@ -32,7 +32,7 @@ export const createRDSInstance = (scope: Construct, options: RdsStackType) => {
     },
   );
 
-  const rdsInstance = new rds.DatabaseInstance(scope, instance.id, {
+  return new rds.DatabaseInstance(scope, instance.id, {
     vpc: getVpc(scope),
     engine: rds.DatabaseInstanceEngine.mysql({
       version: convertMysqlVersion(instance.version),

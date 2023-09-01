@@ -18,7 +18,7 @@ export const createNewInstance = (scope: Construct, props: Ec2StackOption) => {
   const vpc = getVpc(scope);
   const securityGroup = getSecurityGroup(scope, options.securityGroupType);
   const subnet = getSubnet(scope, options.subnetType, options.availabilityZone);
-  return new ec2.Instance(scope, 'a' + props.id, {
+  return new ec2.Instance(scope, props.id, {
     vpc: vpc,
     instanceType: new ec2.InstanceType(options.instanceType),
     machineImage: ec2.MachineImage.latestAmazonLinux2023(),

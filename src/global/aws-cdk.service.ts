@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as cdk from 'aws-cdk-lib';
 import { Ec2InstanceStack } from '../lib/ec2/Ec2InstanceStack';
-import {
-  AccessScopeType,
-  AvailabilityZoneType,
-} from '../cdk/ec2/type/instance.type';
 import { MessageDto } from '../dto /message.dto';
 import { AwsComponentType } from '../type/aws-component.type';
 import { Construct } from 'constructs';
@@ -12,6 +8,9 @@ import * as uuid from 'uuid';
 import * as fs from 'fs';
 import { ApplicationLoadBalancerStack } from '../lib/ec2/application-load-balancer-stack';
 import { RdsInstanceStack } from '../lib/rds/rds-instance-stack';
+import { InjectModel } from '@nestjs/mongoose';
+import { Instance } from '../domain/instance.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class AwsCdkService {
@@ -37,12 +36,19 @@ export async function init() {
       parsedData.map(async (cdkData) => {
         switch (cdkData.type) {
           case AwsComponentType.EC2:
-            const result = await callEc2Stack(
+            const result = callEc2Stack(
               app,
               generateId(AwsComponentType.EC2, now),
               cdkData.options,
             );
             ec2InstanceIds.push(result.getInstanceId());
+            break;
+          case AwsComponentType.RDS_MYSQL:
+            callRdsStack(
+              app,
+              generateId(AwsComponentType.RDS_M, now),
+              cdkData.options,
+            );
             break;
         }
       }),
@@ -56,7 +62,7 @@ export async function init() {
               ...cdkData.options,
               instances: ec2InstanceIds,
             };
-            await callAlbStack(
+            callAlbStack(
               app,
               generateId(AwsComponentType.ALB, now),
               albOptions,
@@ -83,7 +89,7 @@ function generateId(type: AwsComponentType, now: string) {
 }
 
 function callEc2Stack(scope: Construct, id: string, option: any) {
-  return new Ec2InstanceStack(scope, 'a' + id, option, {
+  return new Ec2InstanceStack(scope, id, option, {
     env: { account: '434126037102', region: 'ap-northeast-2' },
   });
 }

@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { RdsStackType } from '../../cdk/rds/type/rds-stack.type';
 import { createRDSInstance } from '../../cdk/rds/RDSInstance';
+import { CfnOutput } from 'aws-cdk-lib';
 
 export class RdsInstanceStack extends cdk.Stack {
   constructor(
@@ -11,6 +12,9 @@ export class RdsInstanceStack extends cdk.Stack {
     props: cdk.StackProps,
   ) {
     super(scope, id, props);
-    createRDSInstance(this, options);
+    const databaseInstance = createRDSInstance(this, options);
+    new CfnOutput(this, 'instanceId', {
+      value: databaseInstance.instanceResourceId,
+    });
   }
 }

@@ -7,7 +7,6 @@ import { AwsCdkService } from './global/aws-cdk.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GlobalModule } from './global/global.module';
 import { Instance, InstanceSchema } from './domain/instance.schema';
-import { HttpModule } from '@nestjs/axios';
 import { CfnOutput, CfnOutputSchema } from './domain/cfn-output.schema';
 
 @Module({
@@ -24,7 +23,6 @@ import { CfnOutput, CfnOutputSchema } from './domain/cfn-output.schema';
       { name: Instance.name, schema: InstanceSchema },
       { name: CfnOutput.name, schema: CfnOutputSchema },
     ]),
-    HttpModule,
   ],
   controllers: [AppController],
   providers: [

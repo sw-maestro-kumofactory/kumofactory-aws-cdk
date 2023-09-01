@@ -11,7 +11,6 @@ import * as AWS from 'aws-sdk';
 import { InjectModel } from '@nestjs/mongoose';
 import { Instance } from './domain/instance.schema';
 import { Model } from 'mongoose';
-import { HttpService } from '@nestjs/axios';
 import { CfnOutput } from './domain/cfn-output.schema';
 
 @Injectable()

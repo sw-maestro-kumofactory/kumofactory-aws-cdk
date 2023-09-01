@@ -16,8 +16,8 @@ import { CfnOutput, CfnOutputSchema } from './domain/cfn-output.schema';
       isGlobal: true,
       envFilePath: './env',
     }),
-    MongooseModule.forRoot('mongodb://root:qwer1234@localhost', {
-      dbName: 'nest',
+    MongooseModule.forRoot('mongodb://root:qwer1234@mongo', {
+      dbName: 'aws',
     }),
     GlobalModule,
     MongooseModule.forFeature([

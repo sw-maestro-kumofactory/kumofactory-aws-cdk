@@ -53,7 +53,6 @@ export class AppService {
       '--outputs-file',
       `./outputs.json`,
     ]);
-
     // 데이터 저장
     await this.saveOutput(blueprintUuid);
     return 'hello';
@@ -74,18 +73,7 @@ export class AppService {
   // 폴더 삭제 함수
   async deleteFolderRecursive(folderPath: string) {
     if (fs.existsSync(folderPath)) {
-      fs.readdirSync(folderPath).forEach((file) => {
-        const curPath = path.join(folderPath, file);
-        if (fs.lstatSync(curPath).isDirectory()) {
-          // 재귀적으로 폴더 내 파일 및 하위 폴더 삭제
-          this.deleteFolderRecursive(curPath);
-        } else {
-          // 파일 삭제
-          fs.unlinkSync(curPath);
-        }
-      });
-      // 폴더 삭제
-      fs.rmdirSync(folderPath);
+      fs.rmSync(folderPath, { recursive: true, force: true });
       console.log(`Deleted folder: ${folderPath}`);
     } else {
       console.log(`Folder not found: ${folderPath}`);

@@ -16,6 +16,9 @@ export class Ec2InstanceStack extends cdk.Stack {
   ) {
     super(scope, id, props);
     this.instance = createNewInstance(this, options);
+    new CfnOutput(this, 'uuid', {
+      value: options.id,
+    });
     new CfnOutput(this, 'instanceId', {
       value: this.instance.instanceId,
     });

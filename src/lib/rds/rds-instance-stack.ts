@@ -13,8 +13,17 @@ export class RdsInstanceStack extends cdk.Stack {
   ) {
     super(scope, id, props);
     const databaseInstance = createRDSInstance(this, options);
+    new CfnOutput(this, 'uuid', {
+      value: options.instance.id,
+    });
     new CfnOutput(this, 'instanceId', {
       value: databaseInstance.instanceResourceId,
+    });
+    new CfnOutput(this, 'endpoint', {
+      value: databaseInstance.dbInstanceEndpointAddress,
+    });
+    new CfnOutput(this, 'port', {
+      value: databaseInstance.dbInstanceEndpointPort,
     });
   }
 }

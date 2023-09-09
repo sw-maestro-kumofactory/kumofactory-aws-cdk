@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as cdk from 'aws-cdk-lib';
 import { Ec2InstanceStack } from '../lib/ec2/Ec2InstanceStack';
-import { MessageDto } from '../dto /message.dto';
+import { MessageDto } from '../dto/message.dto';
 import { AwsComponentType } from '../type/aws-component.type';
 import { Construct } from 'constructs';
 import * as uuid from 'uuid';
@@ -82,7 +82,11 @@ export async function init() {
   return app.synth();
 }
 
-init();
+try {
+  init();
+} catch (e) {
+  console.error('From Aws CDk Service', e);
+}
 
 function generateId(type: AwsComponentType, now: string) {
   return `${type}${now}-${uuid.v4()}`;

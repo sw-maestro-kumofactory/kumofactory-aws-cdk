@@ -1,13 +1,12 @@
 import { Inject, Injectable, StreamableFile } from '@nestjs/common';
 import { ClientProxy, MessagePattern } from '@nestjs/microservices';
-import { MessageDto } from './dto /message.dto';
+import { MessageDto } from './dto/message.dto';
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
 import { exec } from 'aws-cdk/lib';
 import { AwsCdkService } from './global/aws-cdk.service';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as AWS from 'aws-sdk';
 import { InjectModel } from '@nestjs/mongoose';
 import { Instance } from './domain/instance.schema';
 import { Model } from 'mongoose';
@@ -26,17 +25,6 @@ export class AppService {
 
   private readonly app: cdk.App = new cdk.App();
 
-  async getHello(): Promise<string> {
-    const output = await this.cfnOutputModel
-      .findOne({
-        key: '435712ea-af46-4678-8912-ef8d643f262a',
-      })
-      .exec();
-
-    console.log(output);
-    return 'helloworld';
-  }
-
   async synthCdk(data: MessageDto[]) {
     const [key, ...dat] = data;
     const blueprintUuid = key.id;
@@ -44,17 +32,31 @@ export class AppService {
     console.log(dat);
     // file write
     fs.writeFileSync('t.json', JSON.stringify(dat).toString());
-    // execute
-    await exec([
-      'deploy',
-      '--all',
-      '--require-approval',
-      'never',
-      '--outputs-file',
-      `./outputs.json`,
-    ]);
-    // 데이터 저장
-    await this.saveOutput(blueprintUuid);
+
+    try {
+      // execute
+      await exec([
+        'deploy',
+        '--all',
+        '--require-approval',
+        'never',
+        '--outputs-file',
+        `./outputs.json`,
+      ]);
+      // 데이터 저장
+      await this.saveOutput(blueprintUuid);
+
+      console.log(`blueprintUuid : ${blueprintUuid}`);
+    } catch (e) {
+      console.error('From aws service', e);
+      this.client
+        .send('result', {
+          id: blueprintUuid,
+          status: 'FAIL',
+        })
+        .subscribe();
+    }
+
     return 'hello';
   }
 
@@ -67,6 +69,12 @@ export class AppService {
       result: result,
     });
     fs.unlinkSync('./outputs.json');
+    this.client
+      .send('result', {
+        id: key,
+        status: 'SUCCESS',
+      })
+      .subscribe();
     return await model.save();
   }
 

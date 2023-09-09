@@ -16,10 +16,11 @@ import { CfnOutput, CfnOutputSchema } from './domain/cfn-output.schema';
       isGlobal: true,
       envFilePath: './env',
     }),
-    MongooseModule.forRoot('mongodb://root:ie7wi3aM@3.34.46.172', {
+    // mongodb://root:ie7wi3aM@54.180.91.183
+    // mongodb://root:qwer1234@localhost
+    MongooseModule.forRoot('mongodb://root:ie7wi3aM@54.180.91.183', {
       dbName: 'aws',
     }),
-    GlobalModule,
     MongooseModule.forFeature([
       { name: Instance.name, schema: InstanceSchema },
       { name: CfnOutput.name, schema: CfnOutputSchema },
@@ -37,9 +38,9 @@ import { CfnOutput, CfnOutputSchema } from './domain/cfn-output.schema';
           transport: Transport.RMQ,
           options: {
             urls: ['amqp://guest:guest@rabbitmq:5672'],
-            queue: 'kumofactory-queue2',
+            queue: 'aws-cdk-result',
             queueOptions: {
-              durable: true,
+              durable: false,
             },
           },
         });

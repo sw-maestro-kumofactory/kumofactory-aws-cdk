@@ -1,10 +1,6 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, Res, Sse } from '@nestjs/common';
 import { AppService } from './app.service';
 import * as cdk from 'aws-cdk-lib';
-import {
-  AccessScopeType,
-  AvailabilityZoneType,
-} from './cdk/ec2/type/instance.type';
 import {
   ClientProxy,
   Ctx,
@@ -13,14 +9,13 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { MessageDto } from './dto /message.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @MessagePattern()
-  async getP2(
+  async deploy(
     @Payload() data: Record<string, unknown>,
     @Ctx() context: RmqContext,
   ) {
@@ -34,10 +29,5 @@ export class AppController {
     const result = await this.appService.synthCdk(_data);
 
     return 'hello';
-  }
-
-  @Get()
-  async getHello(): Promise<string> {
-    return await this.appService.getHello();
   }
 }

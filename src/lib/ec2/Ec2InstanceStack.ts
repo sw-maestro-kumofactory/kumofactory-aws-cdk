@@ -28,6 +28,15 @@ export class Ec2InstanceStack extends cdk.Stack {
     new CfnOutput(this, 'instanceName', {
       value: options.instanceName,
     });
+    if (options.subnetType == 'PUBLIC') {
+      new CfnOutput(this, 'publicIp', {
+        value: this.instance.instancePublicIp,
+      });
+
+      new CfnOutput(this, 'publicDnsName', {
+        value: this.instance.instancePublicDnsName,
+      });
+    }
   }
 
   public getInstance() {

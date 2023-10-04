@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "Web Three tier Architecture"
+
+Parameters:
+  VPC:
+    Type: String
+    Default: "vpc-0719a1184fa5ccdcd"
+
+  PrivateSubnet1:
+    Type: String
+    Default: "subnet-08ad678f10d1751f9"
+
+  PrivateSubnet2:
+    Type: String
+    Default: "subnet-083b485efbc75aee3"
+
+  PublicSubnet1:
+    Type: String
+    Default: "subnet-043aec505f84e38ac"
+
+  PublicSubnet2:
+    Type: String
+    Default: "subnet-07c1a5153af279dab"
+
+  PublicSecurityGroupId:
+    Type: String
+    Default: "sg-0b21f621ed9a2ad0a"
+
+  PrivateSecurityGroupId:
+    Type: String
+    Default: "sg-047d0f165888ef03a"
+
+Resources:
+  PublicInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0f6fdd05c7b50bbd6"
+      InstanceType: "t3.micro"
+      Monitoring: true
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          SubnetId: !Ref PublicSubnet1
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref PublicSecurityGroupId
+      Tags:
+        - Key: "Name"
+          Value: "PublicInstance1"
+
+  PublicInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0f6fdd05c7b50bbd6"
+      InstanceType: "t3.small"
+      Monitoring: true
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          SubnetId: !Ref PublicSubnet2
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref PublicSecurityGroupId
+      Tags:
+        - Key: "Name"
+          Value: "PublicInstance2"
+
+  # PrivateInstance1:
+  #   Type: AWS::EC2::Instance
+  #   Properties:
+  #     ImageId: "ami-0f6fdd05c7b50bbd6"
+  #     InstanceType: "t3.medium"
+  #     Monitoring: true
+  #     SecurityGroupIds:
+  #       - !Ref PrivateSecurityGroupId
+  #     SubnetId: !Ref PrivateSubnet1
+  #     Tags:
+  #       - Key: "Name"
+  #         Value: "PrivateInstance1"
+
+  # PrivateInstance2:
+  #   Type: AWS::EC2::Instance
+  #   Properties:
+  #     ImageId: "ami-0f6fdd05c7b50bbd6"
+  #     InstanceType: "t3.medium"
+  #     Monitoring: true
+  #     SecurityGroupIds:
+  #       - !Ref PrivateSecurityGroupId
+  #     SubnetId: !Ref PrivateSubnet2
+  #     Tags:
+  #       - Key: "Name"
+  #         Value: "PrivateInstance2"
+
+  # ===============================================================================
+  # ===============================================================================
+  # ===============================================================================
+  # ================================== S3 =========================================
+  # ===============================================================================
+  # ===============================================================================
+  # ===============================================================================
+
+  # Bucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     BucketName: "ttttestqwevxcjks3"
+  #     PublicAccessBlockConfiguration:
+  #       BlockPublicAcls: false
+  #       BlockPublicPolicy: false
+  #       IgnorePublicAcls: false
+  #       RestrictPublicBuckets: false
+
+  # BucketPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #     Bucket: !Ref Bucket
+  #     PolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Action:
+  #             - 's3:GetObject'
+  #           Effect: Allow
+  #           Resource: !Join
+  #             - ''
+  #             - - 'arn:aws:s3:::'
+  #               - !Ref Bucket
+  #               - /*
+  #           Principal: '*'
+
+
+  # ===============================================================================
+  # ===============================================================================
+  # ===============================================================================
+  # ================================== RDS ========================================
+  # ===============================================================================
+  # ===============================================================================
+  # ===============================================================================
+  # RDS:
+  #   Type: AWS::RDS::DBInstance
+  #   Properties:
+  #     AllocatedStorage: 5
+  #     Engine: Mysql
+  #     DBName: kumofactory
+  #     DBInstanceClass: db.t3.micro
+  #     MultiAZ: false
+  #     MasterUsername: root
+  #     MasterUserPassword: qwer1234
+

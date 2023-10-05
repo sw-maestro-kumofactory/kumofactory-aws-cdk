@@ -52,7 +52,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: "ami-0f6fdd05c7b50bbd6"
-      InstanceType: "t3.small"
+      InstanceType: "t3.micro"
       Monitoring: true
       NetworkInterfaces:
         - AssociatePublicIpAddress: true
@@ -64,31 +64,31 @@ Resources:
         - Key: "Name"
           Value: "PublicInstance2"
 
-  # PrivateInstance1:
-  #   Type: AWS::EC2::Instance
-  #   Properties:
-  #     ImageId: "ami-0f6fdd05c7b50bbd6"
-  #     InstanceType: "t3.medium"
-  #     Monitoring: true
-  #     SecurityGroupIds:
-  #       - !Ref PrivateSecurityGroupId
-  #     SubnetId: !Ref PrivateSubnet1
-  #     Tags:
-  #       - Key: "Name"
-  #         Value: "PrivateInstance1"
+  PrivateInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0f6fdd05c7b50bbd6"
+      InstanceType: "t3.medium"
+      Monitoring: true
+      SecurityGroupIds:
+        - !Ref PrivateSecurityGroupId
+      SubnetId: !Ref PrivateSubnet1
+      Tags:
+        - Key: "Name"
+          Value: "PrivateInstance1"
 
-  # PrivateInstance2:
-  #   Type: AWS::EC2::Instance
-  #   Properties:
-  #     ImageId: "ami-0f6fdd05c7b50bbd6"
-  #     InstanceType: "t3.medium"
-  #     Monitoring: true
-  #     SecurityGroupIds:
-  #       - !Ref PrivateSecurityGroupId
-  #     SubnetId: !Ref PrivateSubnet2
-  #     Tags:
-  #       - Key: "Name"
-  #         Value: "PrivateInstance2"
+  PrivateInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0f6fdd05c7b50bbd6"
+      InstanceType: "t3.medium"
+      Monitoring: true
+      SecurityGroupIds:
+        - !Ref PrivateSecurityGroupId
+      SubnetId: !Ref PrivateSubnet2
+      Tags:
+        - Key: "Name"
+          Value: "PrivateInstance2"
 
   # ===============================================================================
   # ===============================================================================
@@ -98,32 +98,32 @@ Resources:
   # ===============================================================================
   # ===============================================================================
 
-  # Bucket:
-  #   Type: AWS::S3::Bucket
-  #   Properties:
-  #     BucketName: "ttttestqwevxcjks3"
-  #     PublicAccessBlockConfiguration:
-  #       BlockPublicAcls: false
-  #       BlockPublicPolicy: false
-  #       IgnorePublicAcls: false
-  #       RestrictPublicBuckets: false
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "jawgjoiajweiogjaiowejgioajweoigjawiojgioawejog"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
 
-  # BucketPolicy:
-  #   Type: AWS::S3::BucketPolicy
-  #   Properties:
-  #     Bucket: !Ref Bucket
-  #     PolicyDocument:
-  #       Version: 2012-10-17
-  #       Statement:
-  #         - Action:
-  #             - 's3:GetObject'
-  #           Effect: Allow
-  #           Resource: !Join
-  #             - ''
-  #             - - 'arn:aws:s3:::'
-  #               - !Ref Bucket
-  #               - /*
-  #           Principal: '*'
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 's3:GetObject'
+            Effect: Allow
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref Bucket
+                - /*
+            Principal: '*'
 
 
   # ===============================================================================
@@ -133,14 +133,94 @@ Resources:
   # ===============================================================================
   # ===============================================================================
   # ===============================================================================
-  # RDS:
-  #   Type: AWS::RDS::DBInstance
-  #   Properties:
-  #     AllocatedStorage: 5
-  #     Engine: Mysql
-  #     DBName: kumofactory
-  #     DBInstanceClass: db.t3.micro
-  #     MultiAZ: false
-  #     MasterUsername: root
-  #     MasterUserPassword: qwer1234
+#  RDS:
+#    Type: AWS::RDS::DBInstance
+#    Properties:
+#      AllocatedStorage: 5
+#      Engine: Mysql
+#      DBName: kumofactory
+#      DBInstanceClass: db.t3.micro
+#      MultiAZ: false
+#      MasterUsername: root
+#      MasterUserPassword: qwer1234
 
+
+# ===============================================================================
+# ===============================================================================
+# ===============================================================================
+# ================================== Output =====================================
+# ===============================================================================
+# ===============================================================================
+# ===============================================================================
+Outputs:
+  PublicInstance1Id:
+    Description: The Instance ID
+    Value: !Ref PublicInstance1
+
+  PublicInstance1Uuid:
+    Description: Uuid
+    Value: "test value"
+
+  PublicInstance1Name:
+    Description: The Instance Name
+    Value: "test name"
+
+  PublicInstance1PublicIP:
+    Description: The Instance Name
+    Value: !GetAtt PublicInstance1.PublicIp
+
+  PublicInstance2Id:
+    Description: The Instance ID
+    Value: !Ref PublicInstance2
+
+  PublicInstance2Uuid:
+    Description: Uuid
+    Value: "test value22"
+
+  PublicInstance2Name:
+    Description: The Instance Name
+    Value: "test name22"
+
+  PublicInstance2PublicIP:
+    Description: The Instance IP
+    Value: !GetAtt PublicInstance2.PublicIp
+
+  PrivateInstance1PrivateIP:
+    Description: A Private IP
+    Value: !GetAtt PrivateInstance1.PrivateIp
+
+  PrivateInstance1Id:
+    Description: The Instance ID
+    Value: !Ref PrivateInstance1
+
+  PrivateInstance1Uuid:
+    Description: Uuid
+    Value: "Private1 Uuid"
+
+  PrivateInstance1Name:
+    Description: The Instance Name
+    Value: "Private1 Name"
+
+  PrivateInstance2PrivateIP:
+    Description: A Private IP
+    Value: !GetAtt PrivateInstance2.PrivateIp
+
+  PrivateInstance2Id:
+    Description: The Instance ID
+    Value: !Ref PrivateInstance2
+
+  PrivateInstance2Uuid:
+    Description: Uuid
+    Value: "Private1 Uuid"
+
+  PrivateInstance2Name:
+    Description: The Instance Name
+    Value: "Private2 Name"
+
+  BucketArn:
+    Description: Bucket Name
+    Value: !GetAtt Bucket.Arn
+
+  BucketDomainName:
+    Description: Bucket Domain Name
+    Value: !GetAtt Bucket.DomainName

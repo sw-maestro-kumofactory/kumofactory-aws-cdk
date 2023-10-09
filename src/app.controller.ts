@@ -26,26 +26,36 @@ import {
   runDeployByAwsCli,
 } from './run-script/aws-cli';
 import * as Path from 'path';
+import { NewMessageDto } from './dto/new-message.dto';
+import { MessageDto } from './dto/message.dto';
+import { TemplateService } from './template/template.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly templateService: TemplateService,
+  ) {}
 
-  @MessagePattern()
-  async deploy(
-    @Payload() data: Record<string, unknown>,
-    @Ctx() context: RmqContext,
-  ) {
-    console.log(`CONTROLLER ${JSON.stringify(data)}`);
+  @MessagePattern('USER')
+  async deploy(@Payload() data: any, @Ctx() context: RmqContext) {
     const channel = context.getChannelRef();
     const originalMessage = context.getMessage();
-
+    const _data = JSON.parse(data);
     channel.ack(originalMessage);
-
-    const _data: any = data;
     const result = await this.appService.synthCdk(_data);
 
     return 'hello';
+  }
+
+  @MessagePattern('KUMO')
+  async deployTemplate(@Payload() data: any, @Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMessage = context.getMessage();
+    const _data = JSON.parse(data);
+    channel.ack(originalMessage);
+    await this.templateService.deployWebThreeTierArchitecture(_data);
+    return 'helloworld';
   }
 
   @Get('/test/:uuid')
@@ -62,8 +72,8 @@ export class AppController {
 
   @Get('/test2')
   async test2() {
-    const result = await getStackDescribe('hello1');
-    console.log(result);
+    // const result = await getStackDescribe('hello1');
+    // await this.templateService.createWebThreeTierArchitecture();
     return 'test2';
   }
 }

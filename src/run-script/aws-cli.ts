@@ -5,7 +5,7 @@ export const runDeployByAwsCli = async (blueprintUuid: string) => {
   const currentPath = path.resolve();
   console.log(currentPath);
   // stack name => blueprint uuid
-  const command: string = `aws cloudformation create-stack --stack-name ${blueprintUuid} --template-body file://${currentPath}/src/static/web-three-tier.yaml`;
+  const command: string = `aws cloudformation create-stack --stack-name v1${blueprintUuid} --template-body file://${currentPath}/${blueprintUuid}.yaml`;
   const stackId = execSync(command);
   console.log(`stackId : ${stackId}`);
 };

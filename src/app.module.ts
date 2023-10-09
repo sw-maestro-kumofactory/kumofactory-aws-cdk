@@ -12,6 +12,7 @@ import { CfnOutput, CfnOutputSchema } from './domain/cfn-output.schema';
 import * as AWS from 'aws-sdk';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { MessageService } from './message/message.service';
+import { TemplateService } from './template/template.service';
 
 AWS.config.update({
   region: 'ap-northeast-2',
@@ -68,6 +69,7 @@ AWS.config.update({
       inject: [ConfigService],
     },
     MessageService,
+    TemplateService,
   ],
 })
 export class AppModule {}

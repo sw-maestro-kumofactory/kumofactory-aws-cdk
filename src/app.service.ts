@@ -3,7 +3,7 @@ import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { MessageDto } from './dto/message.dto';
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
-import { exec } from 'aws-cdk/lib';
+import { cli, exec } from 'aws-cdk/lib';
 import { AwsCdkService } from './global/aws-cdk.service';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -29,10 +29,9 @@ export class AppService {
     const [key, ...dat] = data;
     const blueprintUuid = key.id;
     await this.deleteFolderRecursive('cdk.out');
-    console.log(dat);
     // file write
     fs.writeFileSync('t.json', JSON.stringify(dat).toString());
-
+    //
     try {
       // execute
       await exec([

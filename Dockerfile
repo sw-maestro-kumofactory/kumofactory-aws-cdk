@@ -3,6 +3,8 @@ LABEL authors="wook"
 
 WORKDIR /usr/src/app
 
+RUN yum remove awscli
+
 COPY package.json ./
 
 RUN npm install
@@ -10,7 +12,5 @@ RUN npm install
 COPY . .
 
 RUN npm run build
-
-RUN sudo yum remove awscli
 
 CMD ["npm", "run", "start:prod"]

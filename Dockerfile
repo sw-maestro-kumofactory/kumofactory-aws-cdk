@@ -3,7 +3,8 @@ LABEL authors="wook"
 
 WORKDIR /usr/src/app
 
-RUN yum remove awscli
+RUN apt-get install -y python3-pip
+RUN pip3 install awscli
 
 COPY package.json ./
 

@@ -11,4 +11,6 @@ COPY . .
 
 RUN npm run build
 
+RUN sudo yum remove awscli
+
 CMD ["npm", "run", "start:prod"]

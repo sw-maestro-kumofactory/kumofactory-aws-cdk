@@ -3,7 +3,7 @@ LABEL authors="wook"
 
 WORKDIR /usr/src/app
 
-RUN apt-get install -y python3-pip
+RUN apt install python-setuptools python-pip -y
 RUN pip3 install awscli
 
 COPY package.json ./

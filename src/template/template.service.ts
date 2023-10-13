@@ -16,8 +16,8 @@ export class TemplateService {
     const type: WebThreeTier = this.createWebThreeTireTypes(_data);
     const content = webThreeTierArchitecture(type);
 
-    fs.writeFileSync(`${blueprintUuid}.yaml`, content);
-    await runDeployByAwsCli(blueprintUuid);
+    // fs.writeFileSync(`${blueprintUuid}.yaml`, content);
+    await runDeployByAwsCli(blueprintUuid, content);
   }
 
   createWebThreeTireTypes(_data: MessageDto[]): WebThreeTier {

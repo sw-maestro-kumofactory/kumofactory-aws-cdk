@@ -36,7 +36,9 @@ export class MessageService {
     console.log(json);
     try {
       const blueprintUuid = json.resources[0];
-      console.log('blueprint Uuid ', json.resources[0].split('/')[1]);
+      const sBlueprintUuid = blueprintUuid.split('/')[1];
+      // console.log('blueprint Uuid ', sBlueprintUuid);
+      // console.log('blueprint Uuid ', typeof sBlueprintUuid);
       const detail = JSON.parse(JSON.stringify(json.detail));
       // console.log(resource.split('/')[1]);
       const status = JSON.stringify(
@@ -48,20 +50,20 @@ export class MessageService {
         // status true 로 업데이트
         this.client
           .send('result', {
-            id: blueprintUuid,
+            id: sBlueprintUuid.substring(2),
             status: 'SUCCESS',
           })
           .subscribe();
         // output 결과 가져오기
-        const outputs = await getStackDescribe(stackId);
-        await this.saveOutputs(outputs, blueprintUuid);
+        const outputs = await getStackDescribe(sBlueprintUuid);
+        await this.saveOutputs(outputs, sBlueprintUuid.substring(2));
 
         // model 에 저장
       } else if (status === '"ROLLBACK_COMPLETE"') {
         // status fail 로 업데이트
         this.client
           .send('result', {
-            id: blueprintUuid,
+            id: sBlueprintUuid.substring(2),
             status: 'FAIL',
           })
           .subscribe();
@@ -78,7 +80,7 @@ export class MessageService {
     });
   }
 
-  async saveOutputs(outputs: [any], blueprintUuid: string) {
+  async saveOutputs(outputs: any[], blueprintUuid: string) {
     // console.log(outputs);
     const result = [];
     let public1 = {};

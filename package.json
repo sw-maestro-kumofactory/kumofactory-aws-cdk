@@ -23,6 +23,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.427.0",
     "@aws-sdk/client-ec2": "^3.373.0",
     "@aws-sdk/types": "^3.370.0",
     "@nestjs-plus/rabbitmq": "^1.4.4",

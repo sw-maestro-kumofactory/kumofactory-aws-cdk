@@ -21,8 +21,13 @@ export const runDeployByAwsCli = async (
     StackName: `v1${blueprintUuid}`,
     TemplateBody: content,
   };
-  const command = new CreateStackCommand(input);
-  const response = client.send(command);
+
+  try {
+    const command = new CreateStackCommand(input);
+    const response = client.send(command);
+  } catch (e) {
+    console.error('RUN DEPLOY BY AWS CLI : ', e);
+  }
 };
 
 export const deleteStack = async (stackId: string) => {

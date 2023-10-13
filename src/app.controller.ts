@@ -1,33 +1,12 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Post,
-  Req,
-  Res,
-  Sse,
-} from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
-import * as cdk from 'aws-cdk-lib';
 import {
-  ClientProxy,
   Ctx,
-  EventPattern,
   MessagePattern,
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import {
-  deleteStack,
-  getStackDescribe,
-  runDeployByAwsCli,
-} from './run-script/aws-cli';
-import * as Path from 'path';
-import { NewMessageDto } from './dto/new-message.dto';
-import { MessageDto } from './dto/message.dto';
+import { deleteStack, getStackDescribe } from './run-script/aws-cli';
 import { TemplateService } from './template/template.service';
 
 @Controller()
@@ -58,22 +37,9 @@ export class AppController {
     return 'helloworld';
   }
 
-  @Get('/test/:uuid')
-  async test(@Param() params: any) {
-    await runDeployByAwsCli(params.uuid);
-    return 'test';
-  }
-
   @Get('/stack/deletion/:stackId')
   async deleteStack(@Param() params: any) {
     await deleteStack(params.stackId);
     return 'deleted';
-  }
-
-  @Get('/test2')
-  async test2() {
-    // const result = await getStackDescribe('hello1');
-    // await this.templateService.createWebThreeTierArchitecture();
-    return 'test2';
   }
 }

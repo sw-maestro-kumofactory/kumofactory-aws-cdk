@@ -55,8 +55,7 @@ export class MessageService {
           })
           .subscribe();
         // output 결과 가져오기
-        const outputs = await getStackDescribe(sBlueprintUuid);
-        await this.saveOutputs(outputs, sBlueprintUuid.substring(2));
+        await this.saveOutputs(sBlueprintUuid);
 
         // model 에 저장
       } else if (status === '"ROLLBACK_COMPLETE"') {
@@ -80,15 +79,17 @@ export class MessageService {
     });
   }
 
-  async saveOutputs(outputs: any[], blueprintUuid: string) {
+  async saveOutputs(blueprintUuid: string) {
     // console.log(outputs);
+    const describeResult = await getStackDescribe(blueprintUuid);
+    const outputs = describeResult.Stacks[0].Outputs;
     const result = [];
     let public1 = {};
     let public2 = {};
     let private1 = {};
     let private2 = {};
     let s3 = {};
-
+    console.log('OUTPUTS TYPE ', typeof outputs, ' LENGTH : ', outputs.length);
     for (const output of outputs) {
       const jsonString = JSON.stringify(output);
       const parse = JSON.parse(jsonString);
@@ -215,7 +216,7 @@ export class MessageService {
     result.push(s3);
 
     const model = new this.cfnOutputModel({
-      key: blueprintUuid,
+      key: blueprintUuid.substring(2),
       result: { ...result },
     });
 

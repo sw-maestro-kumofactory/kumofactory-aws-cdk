@@ -48,7 +48,5 @@ export const getStackDescribe = async (stackId: string) => {
     StackName: stackId,
   });
 
-  const result = await client.send(command);
-  console.log(result.Stacks[0].Outputs);
-  return result.Stacks[0].Outputs;
+  return await client.send(command);
 };

@@ -42,4 +42,12 @@ export class AppController {
     await deleteStack(params.stackId);
     return 'deleted';
   }
+
+  // api to get cost of stack
+  @Get('/stack/cost/:stackId')
+  async getCost(@Param() params: any) {
+    
+    return "result";
+  }
 }
+ 

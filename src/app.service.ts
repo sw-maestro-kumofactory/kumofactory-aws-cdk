@@ -13,6 +13,10 @@ import { Model } from 'mongoose';
 import { HttpService } from '@nestjs/axios';
 import { CfnOutput } from './domain/cfn-output.schema';
 
+import * as FormData from 'form-data';
+import { lastValueFrom } from 'rxjs';
+import { InfraCost } from './domain/infra-cost.schema';
+
 @Injectable()
 export class AppService {
   constructor(
@@ -21,6 +25,7 @@ export class AppService {
     @InjectModel(Instance.name) private instanceModel: Model<Instance>,
     private readonly httpService: HttpService,
     @InjectModel(CfnOutput.name) private cfnOutputModel: Model<CfnOutput>,
+    @InjectModel(InfraCost.name) private infraCostModel: Model<InfraCost>,
   ) {}
 
   private readonly app: cdk.App = new cdk.App();
@@ -31,6 +36,11 @@ export class AppService {
     await this.deleteFolderRecursive('cdk.out');
     // file write
     fs.writeFileSync('t.json', JSON.stringify(dat).toString());
+
+    
+    // print t.json
+    console.log(JSON.stringify(dat).toString());
+
     //
     try {
       // execute
@@ -85,5 +95,39 @@ export class AppService {
     } else {
       console.log(`Folder not found: ${folderPath}`);
     }
+  }
+
+  async getCost() {
+    const url = "https://oeejfb9dqe.execute-api.ap-northeast-2.amazonaws.com/default/infracost-lambda";
+
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream('t.json'), {
+      filename: 't.json',
+      contentType: 'application/json',
+    });
+
+    try {
+      const axiosResponse = this.httpService.post(url, formData, {
+        headers: {
+          ...formData.getHeaders(),
+          'x-api-key': 'LTzz04tGiJ9Z3us7x4rqj9NIK7AGuCAS7VVUjs62',
+        },
+      });
+
+      const response = await lastValueFrom(axiosResponse);
+
+      return response.data;
+    } catch (error) {
+      console.error('Error sending file to API:', error);
+      throw error;
+    }
+  }
+
+  async saveCost(uuid: string, result: any) {
+    const model = new this.infraCostModel({
+      _id: uuid,
+      result: result,
+    });
+    return await model.save();
   }
 }

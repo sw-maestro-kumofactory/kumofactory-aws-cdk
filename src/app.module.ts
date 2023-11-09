@@ -9,6 +9,7 @@ import { GlobalModule } from './global/global.module';
 import { Instance, InstanceSchema } from './domain/instance.schema';
 import { HttpModule } from '@nestjs/axios';
 import { CfnOutput, CfnOutputSchema } from './domain/cfn-output.schema';
+import { InfraCost, InfraCostSchema } from './domain/infra-cost.schema';
 import * as AWS from 'aws-sdk';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { MessageService } from './message/message.service';
@@ -32,6 +33,7 @@ AWS.config.update({
     MongooseModule.forFeature([
       { name: Instance.name, schema: InstanceSchema },
       { name: CfnOutput.name, schema: CfnOutputSchema },
+      { name: InfraCost.name, schema: InfraCostSchema },
     ]),
     HttpModule,
     SqsModule.register({

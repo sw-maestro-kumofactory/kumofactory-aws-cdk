@@ -37,13 +37,8 @@ export class AppService {
     // file write
     fs.writeFileSync('t.json', JSON.stringify(dat).toString());
 
-    
-    // print t.json
-    console.log(JSON.stringify(dat).toString());
 
-    //
     try {
-      // execute
       await exec([
         'deploy',
         '--all',
@@ -52,10 +47,17 @@ export class AppService {
         '--outputs-file',
         `./outputs.json`,
       ]);
-      // 데이터 저장
-      await this.saveOutput(blueprintUuid);
 
-      console.log(`blueprintUuid : ${blueprintUuid}`);
+//    cdk.out *.template.json
+      const body = await this.getCost();
+      const cost = new this.infraCostModel({
+        _id: blueprintUuid,
+        result: body,
+      });
+      await cost.save();
+      
+      // await this.saveOutput(blueprintUuid);
+
     } catch (e) {
       console.error('From aws service', e);
       this.client
@@ -100,9 +102,10 @@ export class AppService {
   async getCost() {
     const url = "https://oeejfb9dqe.execute-api.ap-northeast-2.amazonaws.com/default/infracost-lambda";
 
+    const templateFile = await this.findTemplateFile();
     const formData = new FormData();
-    formData.append('file', fs.createReadStream('t.json'), {
-      filename: 't.json',
+    formData.append('file', fs.createReadStream('./cdk.out/'+templateFile), {
+      filename: templateFile,
       contentType: 'application/json',
     });
 
@@ -123,11 +126,46 @@ export class AppService {
     }
   }
 
-  async saveCost(uuid: string, result: any) {
-    const model = new this.infraCostModel({
-      _id: uuid,
-      result: result,
-    });
-    return await model.save();
+  // cdk.out 폴더에 있는 .template.json 확장자를 가진 파일을 찾아 path를 반환하는 함수
+  async findTemplateFile() {
+    const files = fs.readdirSync('./cdk.out');
+    const templateFile = files.find((file) => file.endsWith('.template.json'));
+    return templateFile
+  }
+
+  async costCdk(data: MessageDto[]) {
+    const [key, ...dat] = data;
+    const blueprintUuid = key.id;
+    await this.deleteFolderRecursive('cdk.out');
+    // file write
+    fs.writeFileSync('t.json', JSON.stringify(dat).toString());
+
+    
+    // print t.json
+    console.log(JSON.stringify(dat).toString());
+
+    //
+    try {
+      await exec(['synth']);
+//    cdk.out *.template.json
+      const body = await this.getCost();
+      const cost = new this.infraCostModel({
+        _id: blueprintUuid,
+        result: body,
+      });
+      await cost.save();
+
+
+    } catch (e) {
+      console.error('From aws service', e);
+      this.client
+        .send('result', {
+          id: blueprintUuid,
+          status: 'FAIL',
+        })
+        .subscribe();
+    }
+
+    return 'hello';
   }
 }

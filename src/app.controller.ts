@@ -37,6 +37,17 @@ export class AppController {
     return 'helloworld';
   }
 
+  @MessagePattern('COST')
+  async cost(@Payload() data: any, @Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMessage = context.getMessage();
+    const _data = JSON.parse(data);
+    channel.ack(originalMessage);
+    const result = await this.appService.costCdk(_data);
+
+    return 'hello';
+  }
+
   @Get('/stack/deletion/:stackId')
   async deleteStack(@Param() params: any) {
     await deleteStack(params.stackId);

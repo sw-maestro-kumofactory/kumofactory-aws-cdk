@@ -56,7 +56,7 @@ export class AppService {
       });
       await cost.save();
       
-      // await this.saveOutput(blueprintUuid);
+      await this.saveOutput(blueprintUuid);
 
     } catch (e) {
       console.error('From aws service', e);

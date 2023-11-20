@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import {
   WebThreeTier,
@@ -18,6 +18,15 @@ export class TemplateService {
 
     // fs.writeFileSync(`${blueprintUuid}.yaml`, content);
     await runDeployByAwsCli(blueprintUuid, content);
+  }
+
+  async deployTemplateByName(data: MessageDto[]) {
+    const [key, ..._data] = data;
+    const { id, options } = key;
+    console.log(`template Name is ${JSON.stringify(options)}`);
+    const content = fs.readFileSync('./nginx.json');
+    await runDeployByAwsCli(id, content.toString());
+    return;
   }
 
   createWebThreeTireTypes(_data: MessageDto[]): WebThreeTier {

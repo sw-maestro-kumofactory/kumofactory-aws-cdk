@@ -17,16 +17,16 @@ export const runDeployByAwsCli = async (
   // stack name => blueprint uuid
   // const command: string = `aws cloudformation create-stack --stack-name v1${blueprintUuid} --template-body file://${currentPath}/${blueprintUuid}.yaml`;
   // const stackId = execSync(command);
-  const input = {
-    StackName: `v1${blueprintUuid}`,
-    TemplateBody: content,
-  };
-
   try {
-    const command = new CreateStackCommand(input);
+    const command = new CreateStackCommand({
+      StackName: `v1${blueprintUuid}`,
+      TemplateBody: content,
+      Capabilities: ['CAPABILITY_IAM'],
+    });
     const response = client.send(command);
   } catch (e) {
     console.error('RUN DEPLOY BY AWS CLI : ', e);
+    throw e;
   }
 };
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Logger, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   Ctx,
@@ -37,6 +37,17 @@ export class AppController {
     return 'helloworld';
   }
 
+  @MessagePattern('TEMPLATE')
+  async deployTemplateByName(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log('Enter The Request in Pattern : TEMPLATE');
+    const channel = context.getChannelRef();
+    const originalMessage = context.getMessage();
+    const _data = JSON.parse(data);
+    channel.ack(originalMessage);
+    await this.templateService.deployTemplateByName(_data);
+    return 'hello';
+  }
+
   @MessagePattern('COST')
   async cost(@Payload() data: any, @Ctx() context: RmqContext) {
     const channel = context.getChannelRef();
@@ -57,8 +68,6 @@ export class AppController {
   // api to get cost of stack
   @Get('/stack/cost/:stackId')
   async getCost(@Param() params: any) {
-    
-    return "result";
+    return 'result';
   }
 }
- 

@@ -1,6 +1,6 @@
 #source: https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/ECS
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This stack deploys a Fargate cluster that is in a VPC with both
+Description: This template  deploys a Fargate cluster that is in a VPC with both
   public and private subnets. Containers can be deployed into either
   the public subnets or the private subnets, and there are two load
   balancers. One is inside the public subnet, which can be used to

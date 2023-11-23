@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import {
   WebThreeTier,
@@ -8,9 +8,12 @@ import {
 import { runDeployByAwsCli } from '../run-script/aws-cli';
 import { MessageDto } from '../dto/message.dto';
 import { AwsTemplateType } from '../type/aws-template.type';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class TemplateService {
+  constructor(@Inject('CDK_SERVICE') private readonly client: ClientProxy) {}
+
   async deployWebThreeTierArchitecture(data: MessageDto[]) {
     const [key, ..._data] = data;
     const blueprintUuid = key.id;
@@ -37,10 +40,16 @@ export class TemplateService {
         content = fs.readFileSync('./src/static/s3-read-only.json');
         break;
       case TEMPALTES.FARGATE:
-        content = fs.readFileSync('./src/static/fargate.json');
+        content = fs.readFileSync('./src/static/fargate.yaml');
         break;
     }
     await runDeployByAwsCli(id, content.toString());
+    this.client
+      .send('result', {
+        id: key,
+        status: 'SUCCESS',
+      })
+      .subscribe();
     return;
   }
 

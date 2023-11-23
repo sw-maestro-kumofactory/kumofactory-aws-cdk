@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import {
   WebThreeTier,
   webThreeTierArchitecture,
+  TEMPALTES,
 } from './constants/templates.contants';
 import { runDeployByAwsCli } from '../run-script/aws-cli';
 import { MessageDto } from '../dto/message.dto';
@@ -24,7 +25,21 @@ export class TemplateService {
     const [key, ..._data] = data;
     const { id, options } = key;
     console.log(`template Name is ${JSON.stringify(options)}`);
-    const content = fs.readFileSync('./nginx.json');
+    const templateName = options.templateName;
+    console.log(`template Name is ${templateName}`);
+    let content;
+    // const content = fs.readFileSync('./nginx.json');
+    switch (templateName) {
+      case TEMPALTES.NGINX:
+        content = fs.readFileSync('./src/static/nginx.json');
+        break;
+      case TEMPALTES.S3_READ_ONLY:
+        content = fs.readFileSync('./src/static/s3-read-only.json');
+        break;
+      case TEMPALTES.FARGATE:
+        content = fs.readFileSync('./src/static/fargate.json');
+        break;
+    }
     await runDeployByAwsCli(id, content.toString());
     return;
   }

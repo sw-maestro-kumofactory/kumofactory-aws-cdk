@@ -50,11 +50,12 @@ export class AppService {
 
 //    cdk.out *.template.json
       const body = await this.getCost();
-      const cost = new this.infraCostModel({
-        _id: blueprintUuid,
-        result: body,
-      });
-      await cost.save();
+    
+      await this.infraCostModel.findOneAndUpdate(
+        { _id: blueprintUuid },
+        { $set: { result: body } },
+        { upsert: true, new: true }
+      );
       
       await this.saveOutput(blueprintUuid);
 
@@ -149,11 +150,12 @@ export class AppService {
       await exec(['synth']);
 //    cdk.out *.template.json
       const body = await this.getCost();
-      const cost = new this.infraCostModel({
-        _id: blueprintUuid,
-        result: body,
-      });
-      await cost.save();
+      
+      await this.infraCostModel.findOneAndUpdate(
+        { _id: blueprintUuid },
+        { $set: { result: body } },
+        { upsert: true, new: true }
+      );
 
 
     } catch (e) {

@@ -9,7 +9,9 @@ import * as AWS from "aws-sdk";
 
 AWS.config.update({ region: "ap-northeast-2" });
 
-const client = new CloudFormationClient();
+const client = new CloudFormationClient({
+  region: "ap-northeast-2"
+});
 
 export const runDeployByAwsCli = async (
   blueprintUuid: string,

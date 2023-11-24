@@ -1,5 +1,13 @@
 #source: https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/ECS
 AWSTemplateFormatVersion: '2010-09-09'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "AWS Region Configuration"
+        Parameters:
+          - Region
 Description: This template  deploys a Fargate cluster that is in a VPC with both
   public and private subnets. Containers can be deployed into either
   the public subnets or the private subnets, and there are two load
@@ -33,6 +41,10 @@ Mappings:
     PrivateTwo:
       CIDR: '10.0.203.0/24'
 Resources:
+  Region:
+    Description: "AWS Region to deploy resources"
+    Type: "String"
+    Default: "ap-northeast-2"
   # VPC in which containers will be networked.
   # It has two public subnets, and two private subnets.
   # We distribute the subnets across the first two available subnets

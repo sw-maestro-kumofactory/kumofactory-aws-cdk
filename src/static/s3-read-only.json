@@ -1,7 +1,26 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Service Catalog: S3 Reference Architecture: Public read-only bucket accessible from anywhere. Consider alternate options like distributing via CloudFront OAI instead of creating a bucket using this template.(fdp-1oc5gsre6).",
+  "Metadata": {
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Label": {
+            "default": "AWS Region Configuration"
+          },
+          "Parameters": [
+            "Region"
+          ]
+        }
+      ]
+    }
+  },
   "Resources": {
+    "Region": {
+      "Description": "AWS Region to deploy resources",
+      "Type": "String",
+      "Default": "ap-northeast-2"
+    },
     "S3Bucket": {
       "Type": "AWS::S3::Bucket",
       "DeletionPolicy": "Delete",
@@ -19,12 +38,23 @@
             }
           ]
         },
-        "CorsConfiguration" : { 
-          "CorsRules": [{
-              "AllowedHeaders": ["*"],
-              "AllowedMethods":["PUT", "POST", "DELETE", "GET"],
-              "AllowedOrigins": ["*"]
-          }]
+        "CorsConfiguration": {
+          "CorsRules": [
+            {
+              "AllowedHeaders": [
+                "*"
+              ],
+              "AllowedMethods": [
+                "PUT",
+                "POST",
+                "DELETE",
+                "GET"
+              ],
+              "AllowedOrigins": [
+                "*"
+              ]
+            }
+          ]
         },
         "Tags": [
           {
@@ -44,8 +74,11 @@
     },
     "BucketARN": {
       "Value": {
-        "Fn::GetAtt": ["S3Bucket", "Arn"]
+        "Fn::GetAtt": [
+          "S3Bucket",
+          "Arn"
+        ]
       }
     }
   }
-}
+},

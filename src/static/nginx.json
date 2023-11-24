@@ -15,6 +15,14 @@
         },
         {
           "Label": {
+            "default": "AWS Region Configuration"
+          },
+          "Parameters": [
+            "Region"
+          ]
+        },
+        {
+          "Label": {
             "default": "Linux Instance Configuration"
           },
           "Parameters": [
@@ -47,6 +55,11 @@
     }
   },
   "Parameters": {
+    "Region": {
+      "Description": "AWS Region to deploy resources",
+      "Type": "String",
+      "Default": "ap-northeast-2"
+    },
     "VPC": {
       "Type": "AWS::EC2::VPC::Id",
       "Description": "Select the VPC where the EC2 instances will be created",
